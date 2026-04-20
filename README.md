@@ -20,7 +20,7 @@ pip install -e .
 
 ### Option 1: All auxiliary features provided
 
-For the most accurate predictions, provide the full set of Gaia DR3 auxiliary features alongside the core inputs:
+For the most accurate predictions, provide the full set of Gaia DR3 auxiliary features alongside the core inputs. With `fetch=False`, no network call is made — if you've already supplied the aux columns, GyroNet won't query Gaia. (Note: `fetch` only ever triggers when a `GaiaDR3_ID` is given; if none of the optional columns are needed, its value is irrelevant.)
 
 ```python
 import gyronet
@@ -33,17 +33,17 @@ posterior = gyronet.predict(
     astrometric_excess_noise_sig=0.0,
     G_0=13.87433119,
     parallax=2.471274462,
+    fetch=False,
 )
 
-print(f"Peak   age : {posterior.peak():.1f} Myr")
+print(f"Peak age : {posterior.peak():.1f} Myr")
 print(f"Median age : {posterior.median():.1f} Myr")
-print(f"68% CI     : {posterior.credible_interval(0.68)}")
-posterior.plot()
+print(f"68% CI : {posterior.credible_interval(0.68)}")
 ```
 
-### Option 2: Core inputs only
+### Option 2: Required inputs + Gaia DR3 ID, auto-fetch enabled
 
-If you only have the rotation period and color, GyroNet will still produce a prediction using the baseline model:
+If you know the Gaia DR3 source ID, GyroNet can fetch the auxiliary features from the Gaia archive automatically. This requires an internet connection.
 
 ```python
 import gyronet
@@ -51,13 +51,33 @@ import gyronet
 posterior = gyronet.predict(
     Prot=6.312,
     BPRP_0=1.042798386,
-    e_BPRP_0=0.01570765184, # fetch=True by default
+    e_BPRP_0=0.01570765184,
+    GaiaDR3_ID=5290651323511794816,
+    fetch=True,
 )
 
-print(f"Peak   age : {posterior.peak():.1f} Myr")
+print(f"Peak age : {posterior.peak():.1f} Myr")
 print(f"Median age : {posterior.median():.1f} Myr")
-print(f"68% CI     : {posterior.credible_interval(0.68)}")
-posterior.plot()
+print(f"68% CI : {posterior.credible_interval(0.68)}")
+```
+
+### Option 3: Required inputs only (baseline model)
+
+If you only have the rotation period and color, GyroNet will still produce a prediction using the baseline model alone. This skips the auxiliary-feature reweighting that sharpens and calibrates Option 1/2 predictions, so the resulting posterior will generally be less precise.
+
+```python
+import gyronet
+
+posterior = gyronet.predict(
+    Prot=6.312,
+    BPRP_0=1.042798386,
+    e_BPRP_0=0.01570765184,
+    fetch=False,
+)
+
+print(f"Peak age : {posterior.peak():.1f} Myr")
+print(f"Median age : {posterior.median():.1f} Myr")
+print(f"68% CI : {posterior.credible_interval(0.68)}")
 ```
 
 ## Documentation
