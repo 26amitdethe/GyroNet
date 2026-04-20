@@ -18,22 +18,45 @@ pip install -e .
 
 ## Quickstart
 
+### Option 1: All auxiliary features provided
+
+For the most accurate predictions, provide the full set of Gaia DR3 auxiliary features alongside the core inputs:
+
 ```python
 import gyronet
 
-# Minimal call (Tier 2: baseline model only)
 posterior = gyronet.predict(
-    Prot=8.2, BPRP_0=1.1, e_BPRP_0=0.03
+    Prot=6.312,
+    BPRP_0=1.042798386,
+    e_BPRP_0=0.01570765184,
+    phot_bp_rp_excess_factor=1.2295822,
+    astrometric_excess_noise_sig=0.0,
+    G_0=13.87433119,
+    parallax=2.471274462,
 )
-print(f"Age: {posterior.median():.0f} Myr")
 
-# Full ensemble (Tier 1) with Gaia auto-fetch
+print(f"Peak   age : {posterior.peak():.1f} Myr")
+print(f"Median age : {posterior.median():.1f} Myr")
+print(f"68% CI     : {posterior.credible_interval(0.68)}")
+posterior.plot()
+```
+
+### Option 2: Core inputs only
+
+If you only have the rotation period and color, GyroNet will still produce a prediction using the baseline model:
+
+```python
+import gyronet
+
 posterior = gyronet.predict(
-    Prot=8.2, BPRP_0=1.1, e_BPRP_0=0.03,
-    GaiaDR3_ID=117709729140216320,
+    Prot=6.312,
+    BPRP_0=1.042798386,
+    e_BPRP_0=0.01570765184, # fetch=True by default
 )
-print(f"Tier: {posterior.tier}")
-print(f"68% CI: {posterior.credible_interval(0.68)}")
+
+print(f"Peak   age : {posterior.peak():.1f} Myr")
+print(f"Median age : {posterior.median():.1f} Myr")
+print(f"68% CI     : {posterior.credible_interval(0.68)}")
 posterior.plot()
 ```
 
