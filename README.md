@@ -1,6 +1,6 @@
 # GyroNet
 
-**Stellar age prediction via gyrochronology.** GyroNet takes a star's rotation period and Gaia DR3 color, optionally combined with auxiliary Gaia features, and returns a full posterior over its age using a Bayesian ensemble with adaptive out-of-distribution protection.
+**Stellar age prediction via gyrochronology.** GyroNet takes a star's rotation period and color, optionally combined with auxiliary Gaia features, and returns a full posterior over its age using a Bayesian ensemble with adaptive out-of-distribution protection.
 
 ## Installation
 
@@ -20,7 +20,7 @@ pip install -e .
 
 ### Option 1: All auxiliary features provided
 
-For the most accurate predictions, provide the full set of Gaia DR3 auxiliary features alongside the core inputs. With `fetch=False`, no network call is made — if you've already supplied the aux columns, GyroNet won't query Gaia. (Note: `fetch` only ever triggers when a `GaiaDR3_ID` is given; if none of the optional columns are needed, its value is irrelevant.)
+For the most accurate predictions, provide the full set of Gaia DR3 auxiliary features alongside the core inputs. With `fetch=False`, no network call is made. If you've already supplied the aux columns, GyroNet won't query Gaia. (Note: `fetch` only ever triggers when a `GaiaDR3_ID` is given; if none of the optional columns are needed, its value is irrelevant.)
 
 ```python
 import gyronet
@@ -89,13 +89,15 @@ print(f"68% CI : {posterior.credible_interval(0.68)}")
 
 ## Method
 
-The shipped Tier 1 ensemble averages three posteriors derived from two trained Neural Spline Flow models and three Bayesian reweighting strategies over Gaia DR3 auxiliary features:
+![GyroNet architecture](docs/figures/architecture.png)
 
-1. A quality-weighted flow reweighted by a kernel-smoothed likelihood of the Gaia noise features, with per-star reliability temperatures.
-2. The baseline flow reweighted by learned MLP likelihoods with the same reliability temperatures.
-3. The baseline flow reweighted by the same MLP likelihoods with a constant gentler temperature.
+The shipped Tier 1 ensemble averages three posteriors derived from two trained Neural Spline Flow models and two Bayesian reweighting strategies over Gaia DR3 auxiliary features:
 
-An adaptive temperature mask protects against out-of-distribution stars (for example, very nearby clusters whose proximity-driven photometric artifacts can mimic youth)..
+1. **Precision-Weighted Flow + Cluster-Kernel Likelihood, Reliability-Masked** — a flow trained with a precision-weighted loss, reweighted by a likelihood built from a Gaussian kernel smoother over per-cluster feature statistics, and gated by an adaptive reliability mask.
+2. **Baseline Flow + Learned Likelihood, Reliability-Masked** — the baseline flow, reweighted by learned MLP likelihoods of the noise features, with the same reliability mask.
+3. **Baseline Flow + Tempered Learned Likelihood (T=0.7)** — the baseline flow reweighted by the same learned likelihoods with a constant gentler temperature.
+
+The **Reliability Mask** protects against out-of-distribution stars (for example, very nearby clusters whose proximity-driven photometric artifacts can mimic youth).
 
 ## Citation
 
