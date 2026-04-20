@@ -95,7 +95,7 @@ The shipped Tier 1 ensemble averages three posteriors derived from two trained N
 2. The baseline flow reweighted by learned MLP likelihoods with the same reliability temperatures.
 3. The baseline flow reweighted by the same MLP likelihoods with a constant gentler temperature.
 
-An adaptive temperature mask protects against out-of-distribution stars (for example, very nearby clusters whose proximity-driven photometric artifacts can mimic youth). See [tiers.md](docs/tiers.md) for details.
+An adaptive temperature mask protects against out-of-distribution stars (for example, very nearby clusters whose proximity-driven photometric artifacts can mimic youth)..
 
 ## Citation
 

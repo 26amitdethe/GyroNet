@@ -12,7 +12,7 @@ Every star must provide these three values:
 
 If any of these are missing, `predict()` and `predict_csv()` will raise a `ValueError`.
 
-## Optional auxiliary columns (Tier 1)
+## Optional auxiliary columns
 
 Providing all four of these enables the full ensemble prediction:
 
@@ -23,13 +23,12 @@ Providing all four of these enables the full ensemble prediction:
 | `G_0`                            | Dereddened Gaia G magnitude                    | mag   |
 | `parallax`                       | Parallax                                       | mas   |
 
-Stars missing any of these are demoted to Tier 2 (baseline-only prediction).
 
 ## Gaia auto-fetch
 
 If you provide `GaiaDR3_ID` as a column (or parameter), GyroNet can fetch the auxiliary data for you from the Gaia archive. This happens automatically when `fetch=True` (the default) and any aux column is missing. User-supplied values are never overwritten.
 
-`G_0` is computed as `phot_g_mean_mag - ag_gspphot` from the Gaia tables `gaiadr3.gaia_source` and `gaiadr3.astrophysical_parameters`.
+
 
 ## Input ranges
 
