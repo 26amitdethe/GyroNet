@@ -39,4 +39,4 @@ GyroNet was trained on stars in these ranges. Predictions outside these ranges m
 - **BPRP_0:** 0.5 to ~2.5 (a color cut at `BPRP_0 >= 0.5` is applied at evaluation; bluer stars trigger a warning)
 - **Age range covered by training clusters:** 2 Myr to 3,870 Myr
 
-Stars with `Prot > 100` days or `BPRP_0 > 2.5` (M-dwarf regime where gyrochronology breaks down) will produce a warning.
+Stars with `Prot > 100` days or `BPRP_0 > 2.5` will produce a warning.

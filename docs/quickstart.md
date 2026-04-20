@@ -21,7 +21,8 @@ print(f"Median age: {posterior.median():.0f} Myr")
 print(f"68% CI: {posterior.credible_interval(0.68)}")
 ```
 
-That's the minimal call. It uses only the three inputs the published ChronoFlow model requires, and will fall back to a Tier-2 (baseline) prediction.
+That's the minimal call. It uses only the three core inputs the baseline model requires, and returns a Tier-2 prediction.
+
 
 ## Enabling the full ensemble (Tier 1)
 
