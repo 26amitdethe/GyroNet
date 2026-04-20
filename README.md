@@ -91,7 +91,7 @@ print(f"68% CI : {posterior.credible_interval(0.68)}")
 
 ![GyroNet architecture](docs/figures/architecture.png)
 
-The shipped Tier 1 ensemble averages three posteriors derived from two trained Neural Spline Flow models and two Bayesian reweighting strategies over Gaia DR3 auxiliary features:
+The shipped ensemble averages three posteriors derived from two trained Neural Spline Flow models and two Bayesian reweighting strategies over Gaia DR3 auxiliary features:
 
 1. **Precision-Weighted Flow + Cluster-Kernel Likelihood, Reliability-Masked** — a flow trained with a precision-weighted loss, reweighted by a likelihood built from a Gaussian kernel smoother over per-cluster feature statistics, and gated by an adaptive reliability mask.
 2. **Baseline Flow + Learned Likelihood, Reliability-Masked** — the baseline flow, reweighted by learned MLP likelihoods of the noise features, with the same reliability mask.
