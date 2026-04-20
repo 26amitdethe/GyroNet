@@ -1,0 +1,8 @@
+torch>=2.0
+zuko>=1.0
+numpy>=1.24
+pandas>=1.5
+scipy>=1.10
+scikit-learn>=1.2
+astroquery>=0.4.6
+matplotlib>=3.6

@@ -1,0 +1,5 @@
+include README.md
+include LICENSE
+include requirements.txt
+recursive-include gyronet/weights *.pth *.pkl
+recursive-include gyronet/data *.npy
