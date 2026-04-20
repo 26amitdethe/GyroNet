@@ -84,7 +84,6 @@ print(f"68% CI : {posterior.credible_interval(0.68)}")
 
 - [Quickstart](docs/quickstart.md)
 - [Input format](docs/input_format.md)
-- [Tiers](docs/tiers.md)
 - [API reference](docs/api_reference.md)
 
 ## Method
