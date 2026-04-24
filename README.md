@@ -82,13 +82,13 @@ print(f"68% CI : {posterior.credible_interval(0.68)}")
 
 ## Documentation
 
-- [Quickstart](docs/quickstart.md)
-- [Input format](docs/input_format.md)
-- [API reference](docs/api_reference.md)
+- [Quickstart](https://github.com/26amitdethe/GyroNet/blob/main/docs/quickstart.md)
+- [Input format](https://github.com/26amitdethe/GyroNet/blob/main/docs/input_format.md)
+- [API reference](https://github.com/26amitdethe/GyroNet/blob/main/docs/api_reference.md)
 
 ## Method
 
-![GyroNet architecture](docs/figures/architecture.png)
+![GyroNet architecture](https://raw.githubusercontent.com/26amitdethe/GyroNet/main/docs/figures/architecture.png)
 
 The shipped ensemble averages three posteriors derived from two trained Neural Spline Flow models and two Bayesian reweighting strategies over Gaia DR3 auxiliary features:
 
@@ -102,7 +102,7 @@ The **Reliability Mask** protects against out-of-distribution stars (for example
 
 If you use GyroNet in your research, please cite: *(placeholder — paper in prep)*.
 
-The training catalogue bundled in `training/eda_output_clean.csv` is a derived version of the rotation-period catalogue from Van-Lane et al. (2025), *ChronoFlow: A Neural Spline Flow Framework for Gyrochronology*. The original catalogue is MIT-licensed; this repository redistributes a version enriched with additional Gaia DR3 auxiliary columns. See [`training/README.md`](training/README.md) for full data attribution.
+The training catalogue bundled in `training/eda_output_clean.csv` is a derived version of the rotation-period catalogue from Van-Lane et al. (2025), *ChronoFlow: A Neural Spline Flow Framework for Gyrochronology*. The original catalogue is MIT-licensed; this repository redistributes a version enriched with additional Gaia DR3 auxiliary columns. See [`training/README.md`](https://github.com/26amitdethe/GyroNet/blob/main/training/README.md) for full data attribution.
 
 ## License
 
