@@ -82,17 +82,19 @@ def apply_transforms(df: pd.DataFrame) -> pd.DataFrame:
     out["logProt"] = np.log10(out["Prot"])
 
     if "e_BPRP_0" in out.columns:
-        # log10 of color error; fill NaN with training median
-        with np.errstate(divide="ignore"):
-            logCerr = np.log10(out["e_BPRP_0"].astype(float))
-        n_nan = logCerr.isna().sum() if hasattr(logCerr, "isna") else np.isnan(logCerr).sum()
-        if n_nan:
+        # log10 of color error; fill missing or non-positive values with training median
+        e_bprp = out["e_BPRP_0"].astype(float)
+        invalid = np.isnan(e_bprp) | (e_bprp <= 0)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            logCerr = np.log10(e_bprp.where(~invalid))
+        n_invalid = int(invalid.sum())
+        if n_invalid:
             warnings.warn(
-                f"{int(n_nan)} star(s) missing e_BPRP_0 — filling logCerr "
-                f"with training median ({_LOGCERR_DEFAULT}).",
+                f"{n_invalid} star(s) have missing or non-positive e_BPRP_0 — "
+                f"filling logCerr with training median ({_LOGCERR_DEFAULT}).",
                 stacklevel=2,
             )
-        out["logCerr"] = np.where(np.isnan(logCerr), _LOGCERR_DEFAULT, logCerr)
+        out["logCerr"] = np.where(invalid, _LOGCERR_DEFAULT, logCerr)
 
     # Auxiliary feature transforms — only build columns that have the inputs
     if "phot_bp_rp_excess_factor" in out.columns:
