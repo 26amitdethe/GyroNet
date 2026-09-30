@@ -1,6 +1,6 @@
 torch>=2.0
 zuko>=1.0
-numpy>=1.24
+numpy>=2.0
 pandas>=1.5
 scipy>=1.10
 scikit-learn>=1.2

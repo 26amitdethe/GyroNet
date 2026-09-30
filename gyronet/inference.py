@@ -6,9 +6,9 @@ Reweighting multiplies posteriors by learned likelihood functions of the
 auxiliary Gaia features, with per-star temperatures from the R4 KDE mask.
 
 The shipped ensemble averages three combinations:
-    - NSF-C + R4             (R1 likelihood, R4 per-star temperature)
-    - Baseline + R3 + R4     (R3 likelihood, R4 per-star temperature)
-    - Baseline + R3 @ T=0.7  (R3 likelihood, constant temperature 0.7)
+    - NSF-C + R4               (R1 likelihood, R4 per-star temperature)
+    - Baseline + R3 + R4       (R3 likelihood, R4 per-star temperature)
+    - Baseline + R3 @ 0.7*R4   (R3 likelihood, gentler R4-scaled temperature)
 """
 
 from __future__ import annotations
@@ -231,8 +231,19 @@ def compute_ensemble_posteriors(
     # Branch 2: Baseline + R3 + R4 (R3 likelihood, R4 temperatures)
     branch2 = _apply_reweighting(post_base_t1, df_t1, llfns_r3, logA_grid, r4_temps)
 
-    # Branch 3: Baseline + R3 @ T=0.7 (R3 likelihood, constant 0.7)
-    temps_const = np.full(len(df_t1), 0.7)
+    # Branch 3: Baseline + R3 @ 0.7*R4 (R3 likelihood, gentler R4-scaled
+    # temperature). Previously this used a flat constant of 0.7 regardless
+    # of R4, which meant it alone bypassed the reliability mask: for stars
+    # far out-of-distribution in (G_0, parallax) — e.g. bright, nearby field
+    # stars unlike the faint, distant training clusters — R4 correctly drives
+    # branches 1 and 2 toward the unweighted baseline, but the old branch 3
+    # still applied 70% of the noise-feature likelihood's sharpness
+    # unconditionally, letting it pull the ensemble average toward whatever
+    # (possibly spurious) age that likelihood implied. Scaling by r4_temps
+    # keeps branch 3 "gentler" than branch 2 as documented, while ensuring
+    # it collapses toward the baseline for the same OOD stars branches 1/2
+    # already protect.
+    temps_const = 0.7 * r4_temps
     branch3 = _apply_reweighting(post_base_t1, df_t1, llfns_r3, logA_grid, temps_const)
 
     # Average the three branches, then renormalize
