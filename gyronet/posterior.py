@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
+from scipy.integrate import cumulative_trapezoid
 
 
 class Posterior:
@@ -46,9 +47,12 @@ class Posterior:
         if area > 0:
             self._pdf_on_logA = self._pdf_on_logA / area
 
-        # Cache the CDF for percentile lookups
-        dx = self._logA_grid[1] - self._logA_grid[0]
-        self._cdf = np.cumsum(self._pdf_on_logA) * dx
+        # Cache the CDF for percentile lookups. Uses the same trapezoid rule
+        # as the normalization above and the actual grid spacing, so it is
+        # unbiased and valid on non-uniform grids.
+        self._cdf = cumulative_trapezoid(
+            self._pdf_on_logA, self._logA_grid, initial=0.0
+        )
         self._cdf = np.clip(self._cdf, 0.0, 1.0)
 
     # ------------------------------------------------------------------

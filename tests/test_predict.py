@@ -33,6 +33,19 @@ def test_predict_m67_age_sensible(m67_like_star):
     assert 2000 < median < 6000, f"M67-like median = {median}"
 
 
+def test_predict_nearby_bright_star_age_sensible(hd31527_like_star):
+    """A nearby, bright, Gaia-noise-flagged star (real HD 31527 values) with a
+    20.3-day rotation period should land in an old-age range consistent with
+    standard spin-down, not the spuriously young age (tens of Myr) that the
+    ensemble's branch 3 used to produce for such out-of-distribution stars
+    before its temperature was gated by the R4 reliability mask.
+    """
+    p = gyronet.predict(**hd31527_like_star)
+    assert p.tier == 1
+    median = p.median()
+    assert 1000 < median < 8000, f"HD31527-like median = {median}"
+
+
 def test_predict_csv_from_dataframe(mixed_batch):
     results, posteriors = gyronet.predict_csv(mixed_batch)
     assert isinstance(results, pd.DataFrame)

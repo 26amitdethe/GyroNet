@@ -26,6 +26,38 @@ def test_median_near_mode_for_symmetric(simple_gaussian_posterior):
     assert abs(p.median() - 100.0) < 5.0
 
 
+def test_median_unbiased_for_symmetric_posterior(simple_gaussian_posterior):
+    # The CDF must use the same trapezoid rule as the normalization; a
+    # left-Riemann CDF shifts every quantile down by half a grid cell
+    # (median came out at 99.05 Myr instead of 100).
+    assert abs(simple_gaussian_posterior.median() - 100.0) < 0.5
+
+
+def test_credible_interval_matches_analytic(simple_gaussian_posterior):
+    from scipy.stats import norm
+
+    lo, hi = simple_gaussian_posterior.credible_interval(0.68)
+    expected_lo = 10.0 ** (2.0 + 0.3 * norm.ppf(0.16))
+    expected_hi = 10.0 ** (2.0 + 0.3 * norm.ppf(0.84))
+    assert abs(lo - expected_lo) < 0.2
+    assert abs(hi - expected_hi) < 0.5
+
+
+def test_cdf_correct_on_nonuniform_grid():
+    # Posterior is a public class, so it must not assume a uniform grid.
+    logA = np.sort(np.concatenate([
+        np.linspace(0.0, 2.0, 400),
+        np.linspace(2.0001, 4.14, 100),
+    ]))
+    pdf = np.exp(-0.5 * ((logA - 2.0) / 0.3) ** 2)
+    p = Posterior(logA, pdf, tier=1)
+
+    assert abs(p.median() - 100.0) < 0.5
+    lo95, hi95 = p.credible_interval(0.95)
+    assert abs(lo95 - 10.0 ** (2.0 - 1.96 * 0.3)) < 1.0
+    assert abs(hi95 - 10.0 ** (2.0 + 1.96 * 0.3)) < 10.0
+
+
 def test_credible_intervals_nest(simple_gaussian_posterior):
     p = simple_gaussian_posterior
     lo68, hi68 = p.credible_interval(0.68)

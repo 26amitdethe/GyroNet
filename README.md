@@ -94,7 +94,7 @@ The shipped ensemble averages three posteriors derived from two trained Neural S
 
 1. **Precision-Weighted Flow + Cluster-Kernel Likelihood, Reliability-Masked** — a flow trained with a precision-weighted loss, reweighted by a likelihood built from a Gaussian kernel smoother over per-cluster feature statistics, and gated by an adaptive reliability mask.
 2. **Baseline Flow + Learned Likelihood, Reliability-Masked** — the baseline flow, reweighted by learned MLP likelihoods of the noise features, with the same reliability mask.
-3. **Baseline Flow + Tempered Learned Likelihood (T=0.7)** — the baseline flow reweighted by the same learned likelihoods with a constant gentler temperature.
+3. **Baseline Flow + Tempered Learned Likelihood (T=0.7 × Reliability Mask)** — the baseline flow reweighted by the same learned likelihoods with a gentler temperature, still scaled by the same adaptive reliability mask as branches 1 and 2.
 
 The **Reliability Mask** protects against out-of-distribution stars (for example, very nearby clusters whose proximity-driven photometric artifacts can mimic youth).
 

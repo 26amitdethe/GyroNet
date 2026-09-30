@@ -157,7 +157,6 @@ def _predict_internal(
     verbose: bool,
 ) -> tuple[pd.DataFrame, list[Posterior]]:
     # Gaia auto-fetch: fill missing aux columns for rows with a DR3 ID.
-    # This is a stub for now — step 8 will implement it.
     if fetch and "GaiaDR3_ID" in df.columns:
         df = _maybe_fetch_gaia(df, verbose=verbose)
 

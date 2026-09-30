@@ -34,6 +34,24 @@ def m67_like_star():
 
 
 @pytest.fixture
+def hd31527_like_star():
+    """Real Gaia DR3 values for HD 31527 (source_id 2972622770521857664),
+    a nearby bright field star flagged as producing an anomalously young
+    GyroNet posterior. Its (G_0, parallax) are far outside the training
+    clusters' distribution, so R4 correctly drives its temperature to ~0.
+    """
+    return {
+        "Prot": 20.3,
+        "BPRP_0": 0.764962,
+        "e_BPRP_0": 0.03,  # realistic placeholder; real value not shipped with the bug report
+        "phot_bp_rp_excess_factor": 1.2008102,
+        "astrometric_excess_noise_sig": 22.326704,
+        "G_0": 7.3463535,
+        "parallax": 26.079607,
+    }
+
+
+@pytest.fixture
 def mixed_batch():
     """A batch with one Tier 1 and one Tier 2 star."""
     return pd.DataFrame({

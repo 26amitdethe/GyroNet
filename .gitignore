@@ -52,3 +52,5 @@ gyronet.egg-info/
 .pytest_cache/
 __pycache__/
 venv/
+
+_bug_investigation/
